@@ -1,68 +1,209 @@
-const bases = require('bases');
-const combinator = require('js-combinatorics');
-const base64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 const _ = require('underscore');
-
-const STATUS_BIT_TREE = {
-  assigned:        { base64: 'AB', binary: '1' },
-  dog:             { base64: 'AC', binary: '10' },
-  irate_customer:  { base64: 'AE', binary: '100' },
-  notify_customer: { base64: 'AI', binary: '1000' },
-  environment:     { base64: 'AQ', binary: '10000' },
-  ntw_needed:      { base64: 'Ag', binary: '100000' },
-  access_issue:    { base64: 'BA', binary: '1000000' },
-  refused:         { base64: 'CA', binary: '10000000' },
-  bucket:          { base64: 'EA', binary: '100000000' },
-  reserved1:       { base64: 'IA', binary: '1000000000' },
-  reserved2:       { base64: 'QA', binary: '10000000000' },
-  reserved3:       { base64: 'gA', binary: '100000000000' }
-};
-
-var combinations = [];
-var hashTree = { base64: {}, binary: {} };
-
-function getCombs() {
-  if(combinations.length > 0) {
-    return combinations;
-  };
-
-  combinations = combinator.baseN(base64.split(''), 2).toArray();
-  combinations = _.map(combinations, (comb) => comb.reverse().join(''));
-  return combinations;
-}
 module.exports = {
+  statusCode: [],
+  getStatus: function(status){
+    switch(status){
+      case 'no_trim':
+        this.statusCode[0] = 2;
+        break;
+      case 'not_ready':
+        this.statusCode[0] = 3;
+        break;
+      case 'ready':
+        this.statusCode[0] = 4;
+        break;
+      case 'worked':
+        this.statusCode[0] = 5;
+        break;
+      default:
+        this.statusCode[0] = 1;
+        break;
+    }
+    return this;
+  },
 
-  hashTree: function() {
-    if(hashTree.base64.length > 0 && hashTree.binary.length > 0){
-      return hashTree;
+  getSource: function(source){
+    switch(source){
+      case 'lidar':
+        this.statusCode[1] = 1;
+        break;
+      case 'pi':
+        this.statusCode[1] = 2;
+        break;
+      case 'tc':
+        this.statusCode[1] = 3;
+        break;
+      case 'air':
+        this.statusCode[1] = 4;
+        break;
+      default:
+        this.statusCode[1] = 1;
+        break;
+    }
+    return this;
+  },
+
+  getPriority: function(priority){
+    switch(priority){
+      case 'routine':
+        this.statusCode[2] = 1;
+        break;
+      case 'accelerate':
+        this.statusCode[2] = 2;
+        break;
+      case 'immediate':
+        this.statusCode[2] = 3;
+        break;
+      case 'allgood':
+        this.statusCode[2] = 4;
+        break;
+      default:
+        this.statusCode[2] = 1;
+        break;
+    }
+    return this;
+  },
+
+  getVcCodes: function(vc_codes){
+    switch(vc_codes){
+      case 'VC1c_URGENT':
+        this.statusCode[3] = 1;
+        break;
+      case 'VC1c_AF':
+        this.statusCode[3] = 2;
+        break;
+      case 'VC1c_MO':
+        this.statusCode[3] = 3;
+        break;
+      case 'VC2c_UH':
+        this.statusCode[3] = 4;
+        break;
+      case 'VC3c_UH':
+        this.statusCode[3] = 5;
+        break;
+      case 'VC1p_AF':
+        this.statusCode[3] = 6;
+        break;
+      case 'VC1p_MO':
+        this.statusCode[3] = 7;
+        break;
+      case 'VC2c':
+        this.statusCode[3] = 8;
+        break;
+      case 'VC3c':
+        this.statusCode[3] = 9;
+        break;
+      case 'VC2p':
+        this.statusCode[3] = 10;
+        break;
+      case 'VC3p':
+        this.statusCode[3] = 11;
+        break;
+      default:
+        this.statusCode[3] = 0;
+        break;
     }
 
-    var combinations = getCombs();
+    return this;
+  },
 
-    for(var i = 0; i < combinations.length; i++) {
-      hashTree.base64[combinations[i]] = bases.toBase2(i);
-      hashTree.binary[bases.toBase2(i)] = combinations[i];
+  getAssigned: function(cuf_id) {
+    this.statusCode[4] = cuf_id ? 1 : 0;
+    return this;
+  },
+
+  getDog: function(dog) {
+    this.statusCode[5] = dog ? 1 : 0;
+    return this;
+  },
+
+  getIrateCustomer: function(irate_customer) {
+    this.statusCode[6] = irate_customer ? 1 : 0;
+    return this;
+  },
+
+  getNotifyCustomer: function(notify_customer) {
+    this.statusCode[7] = notify_customer ? 1 : 0;
+    return this;
+  },
+
+  getNtwNeeded: function(ntw_needed) {
+    this.statusCode[8] = ntw_needed ? 1 : 0;
+    return this;
+  },
+
+  getAccessIssue: function(access_issue) {
+    this.statusCode[9] = access_issue ? 1 : 0;
+    return this;
+  },
+
+  getRefused: function(refused) {
+    this.statusCode[10] = refused ? 1 : 0;
+    return this;
+  },
+
+  getVehicleType: function(vehicle_type) {
+    switch(vehicle_type){
+      case 'lift':
+        this.statusCode[11] = 1;
+        break;
+      case 'climb':
+        this.statusCode[11] = 2;
+        break;
+      default:
+        this.statusCode[11] = 0;
+        break;
     }
-
-    return hashTree;
+    return this;
   },
 
-  mixCodes: function(codes){
-    var binaryCodes = [];
-    var base64ToBinary = this.hashTree().base64;
-    var binaryToBase64 = this.hashTree().binary;
-    binaryCodes = _.map(codes, (code) => base64ToBinary[code]);
-    var resultBinary = _.reduce(binaryCodes, (sum, bin) => sum | bin, 0)
-
-    return binaryToBase64[resultBinary];
+  getEnvironmental: function(environmental) {
+    switch(environmental){
+      case 'riparian':
+        this.statusCode[12] = 1;
+        break;
+      case 'velb':
+        this.statusCode[12] = 2;
+        break;
+      case 'raptor_nest':
+        this.statusCode[12] = 3;
+        break;
+      case 'other':
+        this.statusCode[12] = 4;
+        break;
+      default:
+        this.statusCode[12] = 0;
+    }
+    return this;
   },
 
-  includes: function(status, code) {
-    var base64ToBinary = this.hashTree().base64;
-    var binaryToBase64 = this.hashTree().binary;
-    var includes = base64ToBinary[status] & base64ToBinary[code];
-    return includes !== 0;
+  getWarnings: function(warnings) {
+    switch(warnings){
+      case 'bucket':
+        this.statusCode[13] = 1;
+        break;
+      default:
+        this.statusCode[13] = 0;
+    }
+    return this;
   },
 
-  codes: STATUS_BIT_TREE
+  fetchStatusCode: function(source) {
+    // Pipes status code one after another to avoid positioning issues
+    this.getStatus(source.status)
+    .getSource(source.source)
+    .getPriority(source.priority)
+    .getVcCodes(source.vc_codes)
+    .getAssigned(source.cuf_id)
+    .getDog(source.dog)
+    .getIrateCustomer(source.irate_customer)
+    .getNotifyCustomer(source.notify_customer)
+    .getNtwNeeded(source.ntw_needed)
+    .getAccessIssue(source.access_issue)
+    .getRefused(source.refused)
+    .getVehicleType(source.vehicle_type)
+    .getEnvironmental(source.environmental)
+
+    return this.statusCode.join('');
+  }
 };
