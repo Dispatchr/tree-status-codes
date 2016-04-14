@@ -17,7 +17,7 @@ module.exports = {
     .getAccessIssue(source.access_issue)
     .getRefused(source.refused)
     .getVehicleType(source.vehicle_type)
-    .getEnvironmental(source.environmental)
+    .getEnvironmental(source.environment)
 
     return statusFlagsToString.statusCode.join('');
   },
