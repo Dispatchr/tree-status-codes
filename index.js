@@ -9,7 +9,7 @@ module.exports = {
     .getSource(source.source)
     .getPriority(source.priority)
     .getVcCodes(source.vc_codes)
-    .getAssigned(source.cuf_id)
+    .getAssigned(source.assigned)
     .getDog(source.dog)
     .getIrateCustomer(source.irate_customer)
     .getNotifyCustomer(source.notify_customer)
