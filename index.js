@@ -3,6 +3,14 @@ const statusStringToFlags = require('./lib/status-string-to-flags');
 
 module.exports = {
 
+  tree_inspect: function() {
+    return new RegExp(/^[1,3]/);
+  },
+
+  tree_trim: function() {
+    return new RegExp(/^[4]/);
+  },
+
   fetchStatusCode: function(source) {
     // Pipes status code one after another to avoid positioning issues
     statusFlagsToString.getStatus(source.status)
