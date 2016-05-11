@@ -1,5 +1,5 @@
-const statusFlagsToString = require('./lib/status-flags-to-string');
-const statusStringToFlags = require('./lib/status-string-to-flags');
+const StatusFlagsToString = require('./lib/status-flags-to-string');
+const StatusStringToFlags = require('./lib/status-string-to-flags');
 
 module.exports = {
 
@@ -13,6 +13,7 @@ module.exports = {
 
   fetchStatusCode: function(source) {
     // Pipes status code one after another to avoid positioning issues
+    var statusFlagsToString = new StatusFlagsToString();
     statusFlagsToString.getStatus(source.status)
     .getSource(source.source)
     .getPriority(source.priority)
@@ -31,6 +32,7 @@ module.exports = {
   },
 
   fetchStatusFlags: function(status) {
+    var statusStringToFlags = new StatusStringToFlags();
     statusStringToFlags.populateWithStatus(status[0])
     .populateWithSource(status[1])
     .populateWithPriority(status[2])
